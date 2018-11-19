@@ -1,8 +1,13 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router/index";
+import store from "./store/index";
+import ajax from "./utils/ajax";
 
-Vue.config.productionTip = false
-
+Vue.config.productionTip = false;
+Vue.prototype.$ajax = ajax;
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  router,
+  store,
+  render: h => h(App)
+}).$mount("#app");
