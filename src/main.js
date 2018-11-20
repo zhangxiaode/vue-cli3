@@ -4,6 +4,9 @@ import router from "./router/index";
 import store from "./store/index";
 import ajax from "./utils/ajax";
 
+import "./style/reset.less";
+import "./style/common.less";
+
 Vue.config.productionTip = false;
 Vue.prototype.$ajax = ajax;
 new Vue({
