@@ -76,8 +76,28 @@ module.exports = {
     // proxy: 'http://localhost:8888' // 配置跨域处理,只有一个代理
     // 配置多个代理
     proxy: {
-      "/apis": {
-        target: "http://localhost:8888",
+      "/member-api-impl": {
+        target: "http://192.168.0.120:8704",
+        ws: false,
+        changeOrigin: false
+      },
+      "/python": {
+        target: "http://127.0.0.1:8888",
+        ws: false,
+        changeOrigin: false
+      },
+      "/u": {
+        target: "http://sso.people.com.cn",
+        ws: true,
+        changeOrigin: true
+      },
+      "/api": {
+        target: "https://id.ifeng.com",
+        ws: true,
+        changeOrigin: true
+      },
+      "/signup": {
+        target: "https://login.sina.com.cn",
         ws: true,
         changeOrigin: true
       }
