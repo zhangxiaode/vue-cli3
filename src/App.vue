@@ -1,136 +1,115 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" :src="logo" class="logo">
-    <router-view></router-view>
-    <div class="photo">
-      <img id="current" :src="current" alt>
-      <img id="replace" :src="file" alt>
+    <div class="draggable">
+      <vuedraggable 
+        class="draggableTable" 
+        element="table" 
+        v-model="tableData" 
+        :options="dragOptions" 
+        :move="onMove" 
+        @start="isDragging=true"
+        @end="isDragging=false">
+          <tr 
+            v-for="(item,index) in tableData" 
+            :key="index" 
+            :class="['tableItem',{'tableItemChecked': item.checked}]" 
+            @mouseenter="handleMouseenter(item)" 
+            @click="handleClick(item)">
+            <td><label><input type="checkbox" v-model="item.checked"></label></td>
+            <td class="badge1">{{item.date}}</td>
+            <td class="badge2">{{item.name}}</td>
+            <td class="badge3">{{item.address}}</td>
+          </tr>
+      </vuedraggable>
     </div>
-    <div id="form">
-      <input type="file" id="file" ref="file" name="file" @change="changeFile">
-      <input type="submit" id="submit" value="对比" @click="submitFile()">
-    </div>
+    <!-- <transition-group type="transition" class="draggableTr" :name="'flip-list'">
+    </transition-group> -->
   </div>
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld.vue";
+import vuedraggable from 'vuedraggable';
 export default {
   name: "app",
   data() {
     return {
-      logo: require("./assets/logo.png"),
-      current: require("./assets/a.jpg"),
-      file: require("./assets/1.jpg")
-    };
+      isDragging: false,
+      dragOptions: {
+        animation: 300,
+        group: "description",
+        ghostClass: "ghost",
+        draggable: ".tableItemChecked",
+        chosenClass: ".abc123"
+      },
+      tableData: [{
+        checked: true,
+        date: '2011-01-01',
+        name: '王小虎1',
+        address: '河南省驻马店市 1111 弄'
+      }, {
+        checked: false,
+        date: '2012-02-02',
+        name: '王小虎2',
+        address: '北京市朝阳区 2222 弄'
+      }, {
+        checked: false,
+        date: '2013-03-03',
+        name: '王小虎3',
+        address: '浙江省杭州市 3333 弄'
+      }, {
+        checked: false,
+        date: '2014-04-04',
+        name: '王小虎4',
+        address: '江西省南昌市 4444 弄'
+      }]
+    }
   },
-  // components: {
-  //   HelloWorld
-  // },
-  mounted() {
-    // console.log(this.$store.state.loading);
-    // this.$store.commit("showLoading");
-    // console.log(this.$store.state.loading);
-    // var formData = new FormData();
-    // formData.append("phoneNum", "15057159482");
-    // formData.append("verCode", "本又");
-    // this.$ajax
-    //   .post("/u/reg/sendPhoneCode2", formData)
-    //   .then(res => {
-    //     console.log("发送短信成功");
-    //   })
-    //   .catch(err => {
-    //     console.log("发送短信失败");
-    //   });
-    // var formData2 = new FormData();
-    // formData2.append("auth", "93j4");
-    // formData2.append("mobile", "15057159482");
-    // this.$ajax
-    //   .post(
-    //     "/api/SendMsg?callback=jQuery18307117823286996661_1559183587954",
-    //     formData2
-    //   )
-    //   .then(res => {
-    //     console.log("发送短信成功");
-    //   })
-    //   .catch(err => {
-    //     console.log("发送短信失败");
-    //   });
-    // var formData3 = new FormData();
-    // formData3.append("from", "mobile");
-    // formData3.append("format", "json");
-    // formData3.append("name", "15057159482");
-    // this.$ajax
-    //   .post("/signup/check_user.php", formData3)
-    //   .then(res => {
-    //     console.log("发送短信成功");
-    //   })
-    //   .catch(err => {
-    //     console.log("发送短信失败");
-    //   });
-  },
+  components: {vuedraggable},
+  mounted() {},
   methods: {
-    getObjectURL(file) {
-      var url = null;
-      if (window.createObjectURL != undefined) {
-        // basic
-        url = window.createObjectURL(file);
-      } else if (window.URL != undefined) {
-        // mozilla(firefox)
-        url = window.URL.createObjectURL(file);
-      } else if (window.webkitURL != undefined) {
-        // webkit or chrome
-        url = window.webkitURL.createObjectURL(file);
-      }
-      return url;
+    handleClick(item){
+      // item.checked = false;
+      item.checked = !item.checked;
     },
-    changeFile(event) {
-      console.log(event.target.value)
-      this.file = this.getObjectURL(event.target.files[0]);
+    handleMouseenter(item){
+      // item.checked = true;
     },
-    submitFile() {
-      this.$ajax
-        .get("/python/index", {
-          current: this.current,
-          file: this.file
-        })
-        .then(res => {
-          console.log(123, res);
-        })
-        .catch(err => {
-          console.log(456, err);
-        });
+    onMove(e) {
+      console.log(e)
     }
   }
 };
 </script>
 
 <style scoped lang="less">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  /* background: url("./assets/logo.png") no-repeat center center; */
-  .logo {
-    width: 50px;
-    height: 50px;
+  .draggable {
+    width: 1000px;
+    height: 500px;
+    background: #eee;
+    margin: 0 auto;
+    .draggableTable{
+      width: 100%;
+      border-collapse: collapse;
+      .draggableTr{
+        display: block;
+        width: 100%;
+      }
+      tr{
+        width: 100%;
+      }
+      td{
+        border: solid 1px #ccc;
+        height: 42px;
+        line-height: 42px;
+        padding: 20px;
+        cursor: pointer;
+        label{
+          display: block;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+        }
+      }
+    }
   }
-}
-.photo {
-  height: 200px;
-  text-align: center;
-}
-
-.photo img {
-  width: auto;
-  height: 100%;
-}
-
-#form {
-  text-align: center;
-  margin: 30px 0;
-}
 </style>
