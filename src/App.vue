@@ -12,13 +12,15 @@
           <tr 
             v-for="(item,index) in tableData" 
             :key="index" 
-            :class="['tableItem',{'tableItemChecked': item.checked}]" 
-            @mouseenter="handleMouseenter(item)" 
-            @click="handleClick(item)">
-            <td><label><input type="checkbox" v-model="item.checked"></label></td>
+            :class="['tableItem',{'tableItemChecked': item.checked}]">
+            <td @mouseenter="handleMouseenter(item)" >
+              <label><input type="checkbox" v-model="item.checked">移入选中</label>
+            </td>
+            <td @click="handleClick(item)">点击切换选中</td>
             <td class="badge1">{{item.date}}</td>
             <td class="badge2">{{item.name}}</td>
             <td class="badge3">{{item.address}}</td>
+            <td class="drag">选中行拖动排序</td>
           </tr>
       </vuedraggable>
     </div>
@@ -39,6 +41,7 @@ export default {
         group: "description",
         ghostClass: "ghost",
         draggable: ".tableItemChecked",
+        handle: ".drag",
         chosenClass: ".abc123"
       },
       tableData: [{
@@ -72,7 +75,7 @@ export default {
       item.checked = !item.checked;
     },
     handleMouseenter(item){
-      // item.checked = true;
+      item.checked = true;
     },
     onMove(e) {
       console.log(e)
